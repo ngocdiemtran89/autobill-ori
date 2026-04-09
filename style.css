@@ -621,3 +621,239 @@ input#studentCCCD.invalid {
 .cccd-error.show {
   display: block;
 }
+
+/* ===== DATA SOURCE SECTION ===== */
+.data-source-section {
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.05));
+}
+
+.data-status {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.data-status.loaded {
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+}
+
+.data-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.data-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-load-data {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-load-data:hover {
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.1);
+}
+
+.btn-load-data.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.paste-area {
+  margin-top: 12px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.paste-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.paste-area textarea {
+  width: 100%;
+  font-size: 12px;
+  background: var(--bg);
+  margin-bottom: 8px;
+}
+
+.btn-import {
+  padding: 8px 20px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-import:hover {
+  background: var(--primary-dark);
+}
+
+.data-preview {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  border-radius: 8px;
+  padding: 10px 14px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.data-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.data-preview table th {
+  text-align: left;
+  padding: 4px 8px;
+  color: var(--primary-light);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.data-preview table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(45,49,66,0.5);
+  color: var(--text);
+}
+
+/* ===== AUTOFILL ===== */
+.autofill-group {
+  position: relative;
+}
+
+.autofill-badge {
+  font-size: 10px;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.phone-input-wrapper {
+  position: relative;
+}
+
+.phone-input-wrapper input {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  background: var(--bg-input);
+}
+
+.phone-input-wrapper input:focus {
+  border-color: var(--primary);
+}
+
+.phone-input-wrapper input.autofilled {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.phone-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.suggestion-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(45,49,66,0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestion-item:hover {
+  background: rgba(99,102,241,0.1);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.suggestion-phone {
+  font-size: 12px;
+  color: var(--primary-light);
+  font-family: monospace;
+}
+
+.suggestion-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Autofill flash animation */
+@keyframes autofillFlash {
+  0% { background: rgba(34,197,94,0.2); }
+  100% { background: transparent; }
+}
+
+input.just-filled {
+  animation: autofillFlash 0.8s ease;
+}

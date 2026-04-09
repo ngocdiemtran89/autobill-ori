@@ -1,6 +1,13 @@
 // ==========================================
 // ORI ACADEMY - INVOICE IMAGE GENERATOR
+// With Autofill from Google Sheet
 // ==========================================
+
+// Google Sheet ID (from user's actual sheet)
+const SHEET_ID = '19hkkfwrK0elsf6p0WGpyesbA-lexQqHI81nPXkq4GAg';
+
+// Student database (loaded from sheet or paste)
+let studentDB = [];
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,17 +27,298 @@ document.addEventListener('DOMContentLoaded', () => {
     validateCCCD(cccdInput);
   });
 
+  // Phone autofill
+  const phoneInput = document.getElementById('studentPhone');
+  phoneInput.addEventListener('input', () => onPhoneInput(phoneInput));
+  phoneInput.addEventListener('focus', () => onPhoneInput(phoneInput));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.phone-input-wrapper')) {
+      document.getElementById('phoneSuggestions').style.display = 'none';
+    }
+  });
+
   // Auto-scale preview
   updatePreviewScale();
   window.addEventListener('resize', updatePreviewScale);
+
+  // Try auto-load from Google Sheet
+  loadFromGoogleSheet();
 });
 
 function updatePreviewScale() {
   const wrapper = document.getElementById('invoicePreviewWrapper');
   if (!wrapper) return;
-  const availableWidth = wrapper.clientWidth - 40; // padding
+  const availableWidth = wrapper.clientWidth - 40;
   const scale = Math.min(1, availableWidth / 800);
   document.getElementById('invoicePreview').style.setProperty('--preview-scale', scale);
+}
+
+// ===== LOAD DATA FROM GOOGLE SHEET =====
+async function loadFromGoogleSheet() {
+  const btn = document.getElementById('btnLoadSheet');
+  const status = document.getElementById('dataStatus');
+  btn.classList.add('loading');
+  btn.innerHTML = '<span>⏳</span> Đang tải...';
+  status.textContent = 'Đang tải...';
+  status.className = 'data-status';
+
+  try {
+    // Load ChoHoc sheet
+    const choHocData = await fetchSheetData('ChoHoc');
+    // Load HocVien sheet
+    const hocVienData = await fetchSheetData('HocVien');
+
+    // Merge data — prioritize HocVien, fallback ChoHoc
+    studentDB = [];
+    const phoneSet = new Set();
+
+    // Add HocVien data first
+    if (hocVienData.length > 0) {
+      hocVienData.forEach(row => {
+        const phone = normalizePhone(row['SĐT'] || row['SDT'] || '');
+        if (phone) {
+          phoneSet.add(phone);
+          studentDB.push({
+            phone,
+            name: row['Họ Tên'] || row['Ho Ten'] || '',
+            cccd: row['CCCD'] || '',
+            email: row['Email'] || '',
+            source: 'HocVien',
+            nhuCau: '',
+            phanLoai: row['Phân loại'] || row['Phan loai'] || '',
+          });
+        }
+      });
+    }
+
+    // Add ChoHoc data (if phone not already from HocVien)
+    if (choHocData.length > 0) {
+      choHocData.forEach(row => {
+        const phone = normalizePhone(row['SĐT'] || row['SDT'] || '');
+        if (phone && !phoneSet.has(phone)) {
+          phoneSet.add(phone);
+          studentDB.push({
+            phone,
+            name: row['Họ Tên'] || row['Ho Ten'] || '',
+            cccd: row['CCCD'] || '',
+            email: row['Email'] || '',
+            source: 'ChoHoc',
+            nhuCau: row['Nhu cầu'] || row['Nhu cau'] || '',
+            phanLoai: row['Phân loại'] || row['Phan loai'] || '',
+          });
+        }
+      });
+    }
+
+    if (studentDB.length > 0) {
+      status.textContent = `✅ ${studentDB.length} học viên`;
+      status.className = 'data-status loaded';
+      document.getElementById('autofillBadge').style.display = 'inline';
+      showDataPreview();
+      showToast(`✅ Đã tải ${studentDB.length} học viên từ Google Sheet`);
+    } else {
+      status.textContent = 'Không có dữ liệu';
+      showToast('⚠️ Sheet không có dữ liệu hoặc chưa public. Thử "Dán từ Excel"', 'error');
+    }
+  } catch (err) {
+    console.error('Load error:', err);
+    status.textContent = 'Lỗi tải';
+    showToast('⚠️ Không tải được. Hãy dùng "Dán từ Excel" thay thế.', 'error');
+  } finally {
+    btn.classList.remove('loading');
+    btn.innerHTML = '<span>📡</span> Tải từ Google Sheet';
+  }
+}
+
+async function fetchSheetData(sheetName) {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+
+    // Parse the JSONP-like response
+    const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?/);
+    if (!jsonStr) return [];
+
+    const json = JSON.parse(jsonStr[1]);
+    const cols = json.table.cols.map(c => c.label || '');
+    const rows = json.table.rows || [];
+
+    return rows.map(row => {
+      const obj = {};
+      row.c.forEach((cell, i) => {
+        obj[cols[i]] = cell ? (cell.v != null ? String(cell.v) : '') : '';
+      });
+      return obj;
+    });
+  } catch (e) {
+    console.warn(`Failed to fetch ${sheetName}:`, e);
+    return [];
+  }
+}
+
+// ===== PASTE IMPORT =====
+function togglePasteArea() {
+  const area = document.getElementById('pasteArea');
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+  if (area.style.display === 'block') {
+    document.getElementById('pasteInput').focus();
+  }
+}
+
+function importPastedData() {
+  const raw = document.getElementById('pasteInput').value.trim();
+  if (!raw) {
+    showToast('⚠️ Chưa dán dữ liệu!', 'error');
+    return;
+  }
+
+  const lines = raw.split('\n').map(l => l.split('\t'));
+  if (lines.length < 2) {
+    showToast('⚠️ Cần ít nhất 1 dòng header + 1 dòng dữ liệu', 'error');
+    return;
+  }
+
+  const headers = lines[0].map(h => h.trim());
+  const phoneCol = headers.findIndex(h => h.match(/SĐT|SDT|Điện thoại|Phone/i));
+  const nameCol = headers.findIndex(h => h.match(/Họ Tên|Ho Ten|Tên|Name/i));
+  const cccdCol = headers.findIndex(h => h.match(/CCCD/i));
+  const emailCol = headers.findIndex(h => h.match(/Email/i));
+  const nhuCauCol = headers.findIndex(h => h.match(/Nhu cầu|Nhu cau/i));
+
+  if (phoneCol < 0 || nameCol < 0) {
+    showToast('⚠️ Không tìm thấy cột "SĐT" hoặc "Họ Tên" trong header', 'error');
+    return;
+  }
+
+  studentDB = [];
+  for (let i = 1; i < lines.length; i++) {
+    const row = lines[i];
+    const phone = normalizePhone(row[phoneCol] || '');
+    const name = (row[nameCol] || '').trim();
+    if (!phone && !name) continue;
+
+    studentDB.push({
+      phone,
+      name,
+      cccd: cccdCol >= 0 ? (row[cccdCol] || '').trim() : '',
+      email: emailCol >= 0 ? (row[emailCol] || '').trim() : '',
+      nhuCau: nhuCauCol >= 0 ? (row[nhuCauCol] || '').trim() : '',
+      source: 'Paste',
+    });
+  }
+
+  if (studentDB.length > 0) {
+    const status = document.getElementById('dataStatus');
+    status.textContent = `✅ ${studentDB.length} học viên`;
+    status.className = 'data-status loaded';
+    document.getElementById('autofillBadge').style.display = 'inline';
+    document.getElementById('pasteArea').style.display = 'none';
+    showDataPreview();
+    showToast(`✅ Đã nhập ${studentDB.length} học viên từ dữ liệu dán`);
+  } else {
+    showToast('⚠️ Không tìm thấy dữ liệu hợp lệ', 'error');
+  }
+}
+
+function showDataPreview() {
+  const preview = document.getElementById('dataPreview');
+  if (studentDB.length === 0) {
+    preview.style.display = 'none';
+    return;
+  }
+
+  const rows = studentDB.slice(0, 5).map(s =>
+    `<tr><td>${s.phone}</td><td>${s.name}</td><td>${s.cccd || '—'}</td><td>${s.email || '—'}</td></tr>`
+  ).join('');
+
+  preview.innerHTML = `
+    <table>
+      <tr><th>SĐT</th><th>Họ Tên</th><th>CCCD</th><th>Email</th></tr>
+      ${rows}
+    </table>
+    ${studentDB.length > 5 ? `<p style="margin-top:6px;opacity:0.6;">...và ${studentDB.length - 5} học viên khác</p>` : ''}
+  `;
+  preview.style.display = 'block';
+}
+
+// ===== PHONE AUTOFILL =====
+function normalizePhone(phone) {
+  return String(phone).replace(/[^\d]/g, '').replace(/^84/, '0');
+}
+
+function onPhoneInput(input) {
+  const val = normalizePhone(input.value);
+  const sugBox = document.getElementById('phoneSuggestions');
+
+  if (!val || val.length < 3 || studentDB.length === 0) {
+    sugBox.style.display = 'none';
+    return;
+  }
+
+  // Search matches
+  const matches = studentDB.filter(s => s.phone.includes(val));
+
+  if (matches.length === 0) {
+    sugBox.style.display = 'none';
+    return;
+  }
+
+  // Exact match → auto-fill immediately
+  if (matches.length === 1 && matches[0].phone === val) {
+    fillStudentData(matches[0]);
+    sugBox.style.display = 'none';
+    return;
+  }
+
+  // Show suggestions
+  sugBox.innerHTML = matches.slice(0, 8).map((s, i) => `
+    <div class="suggestion-item" onclick="selectSuggestion(${i})" data-index="${i}">
+      <div>
+        <div class="suggestion-name">${escapeHtml(s.name)}</div>
+        <div class="suggestion-meta">${s.nhuCau || s.phanLoai || s.source}</div>
+      </div>
+      <div class="suggestion-phone">${s.phone}</div>
+    </div>
+  `).join('');
+
+  // Store matches for selection
+  sugBox._matches = matches.slice(0, 8);
+  sugBox.style.display = 'block';
+}
+
+function selectSuggestion(index) {
+  const sugBox = document.getElementById('phoneSuggestions');
+  const match = sugBox._matches[index];
+  if (match) {
+    document.getElementById('studentPhone').value = match.phone;
+    fillStudentData(match);
+    sugBox.style.display = 'none';
+  }
+}
+
+function fillStudentData(student) {
+  const fields = {
+    studentName: student.name,
+    studentCCCD: student.cccd,
+    studentEmail: student.email,
+  };
+
+  Object.entries(fields).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el && value) {
+      el.value = value;
+      el.classList.add('just-filled');
+      setTimeout(() => el.classList.remove('just-filled'), 800);
+    }
+  });
+
+  // Visual feedback on phone input
+  const phoneInput = document.getElementById('studentPhone');
+  phoneInput.classList.add('autofilled');
+  setTimeout(() => phoneInput.classList.remove('autofilled'), 2000);
+
+  showToast(`✅ Đã điền thông tin: ${student.name}`);
 }
 
 // ===== CCCD VALIDATION =====

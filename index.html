@@ -46,22 +46,45 @@
           </div>
         </div>
 
+        <!-- DATA SOURCE -->
+        <div class="form-section data-source-section">
+          <h3>📊 Dữ liệu học viên <span class="data-status" id="dataStatus">Chưa tải</span></h3>
+          <p class="data-hint">Tải dữ liệu từ Google Sheet hoặc dán từ Excel để autofill theo SĐT</p>
+          <div class="data-actions">
+            <button class="btn-load-data" onclick="loadFromGoogleSheet()" id="btnLoadSheet">
+              <span>📡</span> Tải từ Google Sheet
+            </button>
+            <button class="btn-load-data btn-paste" onclick="togglePasteArea()">
+              <span>📋</span> Dán từ Excel
+            </button>
+          </div>
+          <div id="pasteArea" class="paste-area" style="display:none;">
+            <p class="paste-hint">Mở Google Sheet → chọn toàn bộ sheet ChoHoc (Ctrl+A) → Copy (Ctrl+C) → Dán vào đây:</p>
+            <textarea id="pasteInput" rows="4" placeholder="Dán dữ liệu từ Google Sheet vào đây (bao gồm dòng header)..."></textarea>
+            <button class="btn-import" onclick="importPastedData()">✅ Nhập dữ liệu</button>
+          </div>
+          <div id="dataPreview" class="data-preview" style="display:none;"></div>
+        </div>
+
         <div class="form-section">
           <h3>👤 Thông tin học viên</h3>
           <div class="form-grid">
-            <div class="form-group">
-              <label>Họ và tên <span class="required">*</span></label>
-              <input type="text" id="studentName" placeholder="Nguyễn Văn A" required>
+            <div class="form-group full autofill-group">
+              <label>Số điện thoại <span class="required">*</span> <span class="autofill-badge" id="autofillBadge" style="display:none;">⚡ Autofill</span></label>
+              <div class="phone-input-wrapper">
+                <input type="text" id="studentPhone" placeholder="Nhập SĐT để tự động điền thông tin..." autocomplete="off">
+                <div id="phoneSuggestions" class="phone-suggestions" style="display:none;"></div>
+              </div>
             </div>
             <div class="form-group">
-              <label>Số điện thoại</label>
-              <input type="text" id="studentPhone" placeholder="09xx xxx xxx">
+              <label>Họ và tên <span class="required">*</span></label>
+              <input type="text" id="studentName" placeholder="Tự động điền khi nhập SĐT" required>
             </div>
             <div class="form-group">
               <label>Số CCCD</label>
               <input type="text" id="studentCCCD" placeholder="079xxxxxxxxx" maxlength="12">
             </div>
-            <div class="form-group">
+            <div class="form-group full">
               <label>Email</label>
               <input type="email" id="studentEmail" placeholder="email@gmail.com">
             </div>
