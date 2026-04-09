@@ -132,7 +132,7 @@ async function loadFromGoogleSheet() {
 
 async function fetchSheetData(sheetName) {
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&headers=1`;
     const res = await fetch(url);
     const text = await res.text();
 
@@ -141,13 +141,35 @@ async function fetchSheetData(sheetName) {
     if (!jsonStr) return [];
 
     const json = JSON.parse(jsonStr[1]);
-    const cols = json.table.cols.map(c => c.label || '');
+    let cols = json.table.cols.map(c => c.label || '');
     const rows = json.table.rows || [];
 
+    if (rows.length === 0) return [];
+
+    // If parsedNumHeaders is 0, the first row is actually the header
+    const hasEmptyLabels = cols.every(c => !c);
+    if (hasEmptyLabels && rows.length > 0) {
+      // Use first row as headers
+      cols = rows[0].c.map(cell => cell ? String(cell.v || '') : '');
+      // Return remaining rows as data
+      return rows.slice(1).map(row => {
+        const obj = {};
+        row.c.forEach((cell, i) => {
+          if (cols[i]) {
+            obj[cols[i]] = cell ? (cell.v != null ? String(cell.v) : '') : '';
+          }
+        });
+        return obj;
+      });
+    }
+
+    // Normal case: labels are populated
     return rows.map(row => {
       const obj = {};
       row.c.forEach((cell, i) => {
-        obj[cols[i]] = cell ? (cell.v != null ? String(cell.v) : '') : '';
+        if (cols[i]) {
+          obj[cols[i]] = cell ? (cell.v != null ? String(cell.v) : '') : '';
+        }
       });
       return obj;
     });
