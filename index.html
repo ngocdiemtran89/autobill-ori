@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORI Academy - Xuất Hóa Đơn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== FORM NHẬP LIỆU ==================== -->
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">🎓</div>
+      <div>
+        <h1>ORI Academy — Xuất Hóa Đơn</h1>
+        <p class="subtitle">Điền thông tin → Xem trước → Tải ảnh PNG</p>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <!-- LEFT: Form -->
+      <div class="form-panel">
+        <div class="form-section">
+          <h3>📋 Thông tin trung tâm</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Tên trung tâm</label>
+              <input type="text" id="centerName" value="ORI ACADEMY" placeholder="Tên trung tâm">
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" id="centerPhone" value="" placeholder="09xx xxx xxx">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="text" id="centerEmail" value="" placeholder="email@example.com">
+            </div>
+            <div class="form-group full">
+              <label>Địa chỉ</label>
+              <input type="text" id="centerAddress" value="" placeholder="Số nhà, đường, quận, TP">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>👤 Thông tin học viên</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Họ và tên <span class="required">*</span></label>
+              <input type="text" id="studentName" placeholder="Nguyễn Văn A" required>
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" id="studentPhone" placeholder="09xx xxx xxx">
+            </div>
+            <div class="form-group">
+              <label>Số CCCD</label>
+              <input type="text" id="studentCCCD" placeholder="079xxxxxxxxx" maxlength="12">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="studentEmail" placeholder="email@gmail.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>💰 Nội dung thanh toán</h3>
+          <div id="itemsContainer">
+            <div class="item-row" data-index="0">
+              <div class="form-grid">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label>Nội dung</label>
+                  <input type="text" class="item-desc" placeholder="VD: Học phí TOEIC Basic (24 buổi)">
+                </div>
+                <div class="form-group">
+                  <label>Số tiền (VNĐ)</label>
+                  <input type="text" class="item-amount" placeholder="3,000,000" oninput="formatMoney(this)">
+                </div>
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <button class="btn-remove-item" onclick="removeItem(this)" title="Xóa dòng">✕</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-add-item" onclick="addItem()">+ Thêm dòng</button>
+
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="form-group">
+              <label>Giảm giá (VNĐ)</label>
+              <input type="text" id="discount" value="0" oninput="formatMoney(this)">
+            </div>
+            <div class="form-group">
+              <label>Hình thức thanh toán</label>
+              <select id="paymentMethod">
+                <option value="Tiền mặt">Tiền mặt</option>
+                <option value="Chuyển khoản">Chuyển khoản</option>
+                <option value="Tiền mặt + Chuyển khoản">Tiền mặt + Chuyển khoản</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Số hóa đơn</label>
+              <input type="text" id="invoiceNumber" placeholder="Tự động">
+            </div>
+            <div class="form-group">
+              <label>Ngày xuất</label>
+              <input type="date" id="invoiceDate">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 8px;">
+            <label>Ghi chú</label>
+            <textarea id="invoiceNote" rows="2" placeholder="Ghi chú thêm (nếu có)"></textarea>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-preview" onclick="renderPreview()">👁️ Xem trước hóa đơn</button>
+          <button class="btn-download" onclick="downloadInvoice()">📥 Tải ảnh PNG</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Preview -->
+      <div class="preview-panel">
+        <div class="preview-label">Xem trước hóa đơn</div>
+        <div id="invoicePreviewWrapper">
+          <div id="invoicePreview" class="invoice-canvas">
+            <!-- Invoice rendered here -->
+            <div class="invoice-empty">
+              <span>👆</span>
+              <p>Điền thông tin bên trái<br>rồi nhấn <strong>"Xem trước"</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HIDDEN INVOICE TEMPLATE FOR EXPORT ==================== -->
+  <div id="invoiceExport" style="position: absolute; left: -9999px; top: 0;">
+    <!-- Will be populated by JS -->
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
