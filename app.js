@@ -16,10 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
 
   // Auto-generate invoice number
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const year = today.getFullYear();
-  const seq = String(Math.floor(Math.random() * 9000) + 1000);
-  document.getElementById('invoiceNumber').value = `HD${year}${month}-${seq}`;
+  generateInvoiceNumber();
+
+  // Load saved center info from localStorage
+  loadCenterInfo();
+
+  // Auto-save center info on change
+  ['centerName', 'centerPhone', 'centerEmail', 'centerAddress'].forEach(id => {
+    document.getElementById(id).addEventListener('blur', saveCenterInfo);
+  });
 
   // CCCD validation
   const cccdInput = document.getElementById('studentCCCD');
@@ -778,4 +783,97 @@ function showToast(message, type = 'success') {
     toast.classList.remove('show');
     setTimeout(() => toast.remove(), 400);
   }, 3000);
+}
+
+// ===== LOCALSTORAGE — CENTER INFO =====
+function saveCenterInfo() {
+  const info = {
+    name: document.getElementById('centerName').value,
+    phone: document.getElementById('centerPhone').value,
+    email: document.getElementById('centerEmail').value,
+    address: document.getElementById('centerAddress').value,
+  };
+  localStorage.setItem('ori_center_info', JSON.stringify(info));
+  const hint = document.getElementById('centerSaveHint');
+  hint.textContent = '✅ Đã lưu';
+  hint.className = 'save-hint saved';
+  setTimeout(() => { hint.textContent = ''; hint.className = 'save-hint'; }, 2000);
+}
+
+function loadCenterInfo() {
+  const saved = localStorage.getItem('ori_center_info');
+  if (saved) {
+    try {
+      const info = JSON.parse(saved);
+      if (info.name) document.getElementById('centerName').value = info.name;
+      if (info.phone) document.getElementById('centerPhone').value = info.phone;
+      if (info.email) document.getElementById('centerEmail').value = info.email;
+      if (info.address) document.getElementById('centerAddress').value = info.address;
+      const hint = document.getElementById('centerSaveHint');
+      hint.textContent = '💾 Đã nhớ từ lần trước';
+      hint.className = 'save-hint saved';
+      setTimeout(() => { hint.textContent = ''; hint.className = 'save-hint'; }, 3000);
+    } catch (e) {}
+  }
+}
+
+// ===== GENERATE INVOICE NUMBER =====
+function generateInvoiceNumber() {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const year = today.getFullYear();
+  const seq = String(Math.floor(Math.random() * 9000) + 1000);
+  document.getElementById('invoiceNumber').value = `HD${year}${month}-${seq}`;
+}
+
+// ===== RESET FORM =====
+function resetForm() {
+  // Clear student info
+  document.getElementById('studentPhone').value = '';
+  document.getElementById('studentName').value = '';
+  document.getElementById('studentCCCD').value = '';
+  document.getElementById('studentEmail').value = '';
+
+  // Clear payment items — keep 1 empty row
+  const container = document.getElementById('itemsContainer');
+  container.innerHTML = `
+    <div class="item-row" data-index="0">
+      <div class="form-grid">
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label>Nội dung</label>
+          <input type="text" class="item-desc" placeholder="VD: Học phí TOEIC Basic (24 buổi)">
+        </div>
+        <div class="form-group">
+          <label>Số tiền (VNĐ)</label>
+          <input type="text" class="item-amount" placeholder="3,000,000" oninput="formatMoney(this)">
+        </div>
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button class="btn-remove-item" onclick="removeItem(this)" title="Xóa dòng">✕</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Reset discount, note
+  document.getElementById('discount').value = '0';
+  document.getElementById('invoiceNote').value = '';
+
+  // New invoice number & date
+  generateInvoiceNumber();
+  document.getElementById('invoiceDate').value = new Date().toISOString().split('T')[0];
+
+  // Clear preview
+  document.getElementById('invoicePreview').innerHTML = `
+    <div class="invoice-empty">
+      <span>👆</span>
+      <p>Điền thông tin bên trái<br>rồi nhấn <strong>"Xem trước"</strong></p>
+    </div>
+  `;
+  document.getElementById('invoiceExport').innerHTML = '';
+
+  // Focus phone input
+  document.getElementById('studentPhone').focus();
+
+  showToast('🔄 Đã reset — sẵn sàng xuất bill mới!');
 }

@@ -857,3 +857,37 @@ input#studentCCCD.invalid {
 input.just-filled {
   animation: autofillFlash 0.8s ease;
 }
+
+/* ===== RESET BUTTON ===== */
+.btn-reset {
+  padding: 14px 24px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reset:hover {
+  border-color: var(--primary);
+  color: var(--primary-light);
+  background: rgba(99,102,241,0.05);
+}
+
+/* ===== SAVE HINT ===== */
+.save-hint {
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.save-hint.saved {
+  opacity: 1;
+  color: #22c55e;
+}

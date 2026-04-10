@@ -25,7 +25,7 @@
       <!-- LEFT: Form -->
       <div class="form-panel">
         <div class="form-section">
-          <h3>📋 Thông tin trung tâm</h3>
+          <h3>📋 Thông tin trung tâm <span class="save-hint" id="centerSaveHint"></span></h3>
           <div class="form-grid">
             <div class="form-group full">
               <label>Tên trung tâm</label>
@@ -148,6 +148,7 @@
         <div class="action-buttons">
           <button class="btn-preview" onclick="renderPreview()">👁️ Xem trước hóa đơn</button>
           <button class="btn-download" onclick="downloadInvoice()">📥 Tải ảnh PNG</button>
+          <button class="btn-reset" onclick="resetForm()">🔄 Làm bill mới</button>
         </div>
       </div>
 
