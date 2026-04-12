@@ -80,17 +80,17 @@ async function loadFromGoogleSheet() {
     // Add HocVien data first
     if (hocVienData.length > 0) {
       hocVienData.forEach(row => {
-        const phone = normalizePhone(row['SĐT'] || row['SDT'] || '');
+        const phone = normalizePhone(row['SĐT'] || row['SDT'] || row['SĐT'] || '');
         if (phone) {
           phoneSet.add(phone);
           studentDB.push({
             phone,
-            name: row['Họ Tên'] || row['Ho Ten'] || '',
+            name: row['Họ Tên'] || row['Ho Ten'] || row['Họ tên'] || '',
             cccd: row['CCCD'] || '',
             email: row['Email'] || '',
             source: 'HocVien',
             nhuCau: '',
-            phanLoai: row['Phân loại'] || row['Phan loai'] || '',
+            phanLoai: row['Phân loại'] || row['Phan loai'] || row['Phan Loai'] || '',
           });
         }
       });
@@ -99,17 +99,17 @@ async function loadFromGoogleSheet() {
     // Add ChoHoc data (if phone not already from HocVien)
     if (choHocData.length > 0) {
       choHocData.forEach(row => {
-        const phone = normalizePhone(row['SĐT'] || row['SDT'] || '');
+        const phone = normalizePhone(row['SĐT'] || row['SDT'] || row['SĐT'] || '');
         if (phone && !phoneSet.has(phone)) {
           phoneSet.add(phone);
           studentDB.push({
             phone,
-            name: row['Họ Tên'] || row['Ho Ten'] || '',
+            name: row['Họ Tên'] || row['Ho Ten'] || row['Họ tên'] || '',
             cccd: row['CCCD'] || '',
             email: row['Email'] || '',
             source: 'ChoHoc',
-            nhuCau: row['Nhu cầu'] || row['Nhu cau'] || '',
-            phanLoai: row['Phân loại'] || row['Phan loai'] || '',
+            nhuCau: row['Nhu cầu'] || row['Nhu cau'] || row['Nhu Cau'] || '',
+            phanLoai: row['Phân loại'] || row['Phan loai'] || row['Phan Loai'] || '',
           });
         }
       });

@@ -1,25 +1,28 @@
 /* ==========================================
    ORI ACADEMY - INVOICE GENERATOR
-   Premium Design System
+   Bamboo Airways Inspired - White & Teal
    ========================================== */
 
 :root {
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #a5b4fc;
-  --accent: #f59e0b;
-  --bg: #0f1117;
-  --bg-card: #1a1d27;
-  --bg-input: #252836;
-  --bg-hover: #2d3142;
-  --text: #e8e9ed;
-  --text-muted: #8b8fa3;
-  --text-dim: #5c6078;
-  --border: #2d3142;
-  --success: #22c55e;
-  --danger: #ef4444;
+  --primary: #00897B;
+  --primary-dark: #00695C;
+  --primary-light: #4DB6AC;
+  --primary-pale: #E0F2F1;
+  --accent: #26A69A;
+  --bg: #f5f7fa;
+  --bg-card: #ffffff;
+  --bg-input: #f8fafb;
+  --bg-hover: #f0f4f5;
+  --text: #263238;
+  --text-muted: #607D8B;
+  --text-dim: #90A4AE;
+  --border: #CFD8DC;
+  --border-light: #ECEFF1;
+  --success: #2E7D32;
+  --danger: #D32F2F;
   --radius: 12px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -45,7 +48,7 @@ body {
   gap: 16px;
   margin-bottom: 28px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--primary-pale);
 }
 
 .app-header .logo {
@@ -55,15 +58,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary), #a855f7);
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 137, 123, 0.25);
 }
 
 .app-header h1 {
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: var(--primary-dark);
 }
 
 .app-header .subtitle {
@@ -95,16 +99,17 @@ body {
 
 .form-section {
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius);
   padding: 24px;
+  box-shadow: var(--shadow);
 }
 
 .form-section h3 {
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 16px;
-  color: var(--primary-light);
+  color: var(--primary-dark);
 }
 
 .form-grid {
@@ -125,7 +130,7 @@ body {
 
 .form-group label {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -149,7 +154,7 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.12);
 }
 
 input::placeholder, textarea::placeholder {
@@ -159,7 +164,7 @@ input::placeholder, textarea::placeholder {
 select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8fa3' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23607D8B' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 32px;
@@ -173,7 +178,7 @@ textarea {
 /* ===== ITEMS ===== */
 .item-row {
   background: var(--bg-input);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 8px;
@@ -182,7 +187,7 @@ textarea {
 }
 
 .item-row:hover {
-  border-color: var(--primary);
+  border-color: var(--primary-light);
 }
 
 .item-row .form-grid {
@@ -195,14 +200,14 @@ textarea {
 }
 
 .item-row input {
-  background: var(--bg-card);
+  background: white;
 }
 
 .btn-remove-item {
   width: 36px;
   height: 36px;
   border: none;
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(211, 47, 47, 0.08);
   color: var(--danger);
   border-radius: 8px;
   cursor: pointer;
@@ -234,8 +239,8 @@ textarea {
 
 .btn-add-item:hover {
   border-color: var(--primary);
-  color: var(--primary-light);
-  background: rgba(99, 102, 241, 0.05);
+  color: var(--primary);
+  background: var(--primary-pale);
 }
 
 /* ===== ACTION BUTTONS ===== */
@@ -258,25 +263,24 @@ textarea {
 }
 
 .btn-preview {
-  background: var(--bg-card);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: white;
+  color: var(--primary-dark);
+  border: 2px solid var(--primary);
 }
 
 .btn-preview:hover {
-  background: var(--bg-hover);
-  border-color: var(--primary);
+  background: var(--primary-pale);
 }
 
 .btn-download {
-  background: linear-gradient(135deg, var(--primary), #a855f7);
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: white;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 137, 123, 0.3);
 }
 
 .btn-download:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 6px 24px rgba(0, 137, 123, 0.45);
 }
 
 .btn-download:active {
@@ -299,12 +303,13 @@ textarea {
 }
 
 #invoicePreviewWrapper {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: white;
+  border: 1px solid var(--border-light);
   border-radius: var(--radius);
   padding: 20px;
   overflow: auto;
   max-height: calc(100vh - 140px);
+  box-shadow: var(--shadow);
 }
 
 .invoice-canvas {
@@ -313,7 +318,6 @@ textarea {
   overflow: hidden;
   min-height: 400px;
   transform-origin: top left;
-  /* Scale to fit preview panel */
   transform: scale(var(--preview-scale, 0.7));
   width: 800px;
   margin-bottom: calc((var(--preview-scale, 0.7) - 1) * 1100px);
@@ -325,7 +329,7 @@ textarea {
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  color: #9ca3af;
+  color: #90A4AE;
 }
 
 .invoice-empty span {
@@ -337,19 +341,19 @@ textarea {
   text-align: center;
   font-size: 14px;
   line-height: 1.8;
-  color: #6b7280;
+  color: #78909C;
 }
 
-/* ===== INVOICE TEMPLATE (printed to image) ===== */
+/* ===== INVOICE TEMPLATE — BAMBOO AIRWAYS STYLE ===== */
 .inv {
   width: 800px;
   font-family: 'Inter', sans-serif;
-  color: #1a1a2e;
+  color: #263238;
   background: #ffffff;
 }
 
 .inv-header {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #00695C 0%, #00897B 50%, #26A69A 100%);
   color: white;
   padding: 36px 40px;
   display: flex;
@@ -367,7 +371,7 @@ textarea {
 
 .inv-company p {
   font-size: 12.5px;
-  opacity: 0.88;
+  opacity: 0.9;
   line-height: 1.7;
 }
 
@@ -380,7 +384,7 @@ textarea {
   font-weight: 800;
   letter-spacing: 3px;
   margin-bottom: 10px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .inv-title .inv-number {
@@ -405,17 +409,17 @@ textarea {
 }
 
 .inv-info-box {
-  background: #f8f9fc;
+  background: #E0F2F1;
   border-radius: 12px;
   padding: 20px 22px;
-  border-left: 4px solid #6366f1;
+  border-left: 4px solid #00897B;
 }
 
 .inv-info-box h3 {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1.8px;
-  color: #6366f1;
+  color: #00695C;
   margin-bottom: 14px;
   font-weight: 700;
 }
@@ -428,12 +432,12 @@ textarea {
 }
 
 .inv-info-label {
-  color: #6b7280;
+  color: #607D8B;
 }
 
 .inv-info-value {
   font-weight: 600;
-  color: #1a1a2e;
+  color: #263238;
   text-align: right;
   max-width: 60%;
   word-break: break-word;
@@ -447,15 +451,15 @@ textarea {
 }
 
 .inv-table thead th {
-  background: #f0f0f7;
+  background: #E0F2F1;
   padding: 13px 16px;
   text-align: left;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: #6b7280;
+  color: #00695C;
   font-weight: 700;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid #B2DFDB;
 }
 
 .inv-table thead th:nth-child(3),
@@ -465,7 +469,7 @@ textarea {
 
 .inv-table tbody td {
   padding: 14px 16px;
-  border-bottom: 1px solid #f0f2f5;
+  border-bottom: 1px solid #ECEFF1;
   font-size: 13.5px;
 }
 
@@ -477,7 +481,7 @@ textarea {
 
 .inv-table tbody td:first-child {
   text-align: center;
-  color: #6b7280;
+  color: #78909C;
   font-weight: 500;
 }
 
@@ -490,7 +494,7 @@ textarea {
 
 .inv-total-box {
   width: 320px;
-  background: linear-gradient(135deg, #f8f9fc, #eef0f7);
+  background: linear-gradient(135deg, #E0F2F1, #B2DFDB);
   border-radius: 12px;
   padding: 18px 22px;
 }
@@ -503,35 +507,35 @@ textarea {
 }
 
 .inv-total-row.grand {
-  border-top: 2px solid #6366f1;
+  border-top: 2px solid #00897B;
   margin-top: 8px;
   padding-top: 12px;
   font-size: 18px;
   font-weight: 800;
-  color: #6366f1;
+  color: #00695C;
 }
 
 .inv-words {
-  background: #fffbeb;
-  border: 1px solid #fde68a;
+  background: #E8F5E9;
+  border: 1px solid #A5D6A7;
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 12.5px;
-  color: #92400e;
+  color: #2E7D32;
   margin-bottom: 20px;
 }
 
 .inv-words strong {
-  color: #b45309;
+  color: #1B5E20;
 }
 
 .inv-note {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: #FFF3E0;
+  border: 1px solid #FFCC80;
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 12px;
-  color: #166534;
+  color: #E65100;
   margin-bottom: 28px;
 }
 
@@ -541,7 +545,7 @@ textarea {
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #CFD8DC;
 }
 
 .inv-sig {
@@ -551,13 +555,13 @@ textarea {
 .inv-sig .sig-title {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: #37474F;
   margin-bottom: 8px;
 }
 
 .inv-sig .sig-date {
   font-size: 11px;
-  color: #9ca3af;
+  color: #90A4AE;
   font-style: italic;
   margin-bottom: 50px;
 }
@@ -565,8 +569,8 @@ textarea {
 .inv-sig .sig-name {
   font-size: 14px;
   font-weight: 600;
-  color: #1a1a2e;
-  border-top: 1px dashed #d1d5db;
+  color: #263238;
+  border-top: 1px dashed #B0BEC5;
   padding-top: 8px;
   display: inline-block;
   min-width: 180px;
@@ -577,8 +581,8 @@ textarea {
   text-align: center;
   padding: 16px;
   font-size: 10px;
-  color: #d1d5db;
-  border-top: 1px solid #f0f2f5;
+  color: #B0BEC5;
+  border-top: 1px solid #ECEFF1;
   letter-spacing: 1px;
 }
 
@@ -593,7 +597,7 @@ textarea {
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 4px 20px rgba(46, 125, 50, 0.35);
   transform: translateY(100px);
   opacity: 0;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -608,7 +612,7 @@ textarea {
 /* CCCD Validation */
 input#studentCCCD.invalid {
   border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
 }
 
 .cccd-error {
@@ -624,8 +628,8 @@ input#studentCCCD.invalid {
 
 /* ===== DATA SOURCE SECTION ===== */
 .data-source-section {
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(168,85,247,0.05));
+  border: 1px solid rgba(0, 137, 123, 0.25);
+  background: linear-gradient(135deg, rgba(0,137,123,0.03), rgba(38,166,154,0.05));
 }
 
 .data-status {
@@ -634,15 +638,15 @@ input#studentCCCD.invalid {
   padding: 2px 10px;
   border-radius: 12px;
   font-weight: 600;
-  background: rgba(239,68,68,0.15);
-  color: #ef4444;
+  background: rgba(211,47,47,0.1);
+  color: #D32F2F;
   margin-left: 8px;
   vertical-align: middle;
 }
 
 .data-status.loaded {
-  background: rgba(34,197,94,0.15);
-  color: #22c55e;
+  background: rgba(46,125,50,0.12);
+  color: #2E7D32;
 }
 
 .data-hint {
@@ -660,7 +664,7 @@ input#studentCCCD.invalid {
   flex: 1;
   padding: 10px 16px;
   border: 1px solid var(--border);
-  background: var(--bg-input);
+  background: white;
   color: var(--text);
   border-radius: 8px;
   font-size: 13px;
@@ -676,7 +680,8 @@ input#studentCCCD.invalid {
 
 .btn-load-data:hover {
   border-color: var(--primary);
-  background: rgba(99,102,241,0.1);
+  background: var(--primary-pale);
+  color: var(--primary-dark);
 }
 
 .btn-load-data.loading {
@@ -703,7 +708,7 @@ input#studentCCCD.invalid {
 .paste-area textarea {
   width: 100%;
   font-size: 12px;
-  background: var(--bg);
+  background: white;
   margin-bottom: 8px;
 }
 
@@ -728,7 +733,7 @@ input#studentCCCD.invalid {
   margin-top: 12px;
   font-size: 12px;
   color: var(--text-muted);
-  background: var(--bg-input);
+  background: var(--primary-pale);
   border-radius: 8px;
   padding: 10px 14px;
   max-height: 120px;
@@ -744,14 +749,14 @@ input#studentCCCD.invalid {
 .data-preview table th {
   text-align: left;
   padding: 4px 8px;
-  color: var(--primary-light);
+  color: var(--primary-dark);
   border-bottom: 1px solid var(--border);
   font-weight: 600;
 }
 
 .data-preview table td {
   padding: 4px 8px;
-  border-bottom: 1px solid rgba(45,49,66,0.5);
+  border-bottom: 1px solid var(--border-light);
   color: var(--text);
 }
 
@@ -762,7 +767,7 @@ input#studentCCCD.invalid {
 
 .autofill-badge {
   font-size: 10px;
-  background: linear-gradient(135deg, var(--primary), #a855f7);
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: white;
   padding: 2px 8px;
   border-radius: 10px;
@@ -785,7 +790,7 @@ input#studentCCCD.invalid {
   font-size: 16px;
   padding: 12px 14px;
   border: 2px solid var(--border);
-  background: var(--bg-input);
+  background: white;
 }
 
 .phone-input-wrapper input:focus {
@@ -794,7 +799,7 @@ input#studentCCCD.invalid {
 
 .phone-input-wrapper input.autofilled {
   border-color: var(--success);
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
 }
 
 .phone-suggestions {
@@ -802,28 +807,28 @@ input#studentCCCD.invalid {
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--bg-card);
+  background: white;
   border: 1px solid var(--border);
   border-top: none;
   border-radius: 0 0 8px 8px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 100;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .suggestion-item {
   padding: 10px 14px;
   cursor: pointer;
   transition: background 0.15s;
-  border-bottom: 1px solid rgba(45,49,66,0.3);
+  border-bottom: 1px solid var(--border-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .suggestion-item:hover {
-  background: rgba(99,102,241,0.1);
+  background: var(--primary-pale);
 }
 
 .suggestion-item:last-child {
@@ -838,7 +843,7 @@ input#studentCCCD.invalid {
 
 .suggestion-phone {
   font-size: 12px;
-  color: var(--primary-light);
+  color: var(--primary);
   font-family: monospace;
 }
 
@@ -850,7 +855,7 @@ input#studentCCCD.invalid {
 
 /* Autofill flash animation */
 @keyframes autofillFlash {
-  0% { background: rgba(34,197,94,0.2); }
+  0% { background: rgba(46,125,50,0.15); }
   100% { background: transparent; }
 }
 
@@ -862,7 +867,7 @@ input.just-filled {
 .btn-reset {
   padding: 14px 24px;
   border: 2px solid var(--border);
-  background: transparent;
+  background: white;
   color: var(--text-muted);
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
@@ -874,8 +879,8 @@ input.just-filled {
 
 .btn-reset:hover {
   border-color: var(--primary);
-  color: var(--primary-light);
-  background: rgba(99,102,241,0.05);
+  color: var(--primary);
+  background: var(--primary-pale);
 }
 
 /* ===== SAVE HINT ===== */
@@ -889,5 +894,5 @@ input.just-filled {
 
 .save-hint.saved {
   opacity: 1;
-  color: #22c55e;
+  color: #2E7D32;
 }
